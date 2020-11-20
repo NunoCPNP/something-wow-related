@@ -1,0 +1,13 @@
+{
+  "lerna": "3.22.1",
+  "packages": ["apis/*", "apps/*", "ui/*"],
+  "version": "independent",
+  "npmClient": "yarn",
+  "useWorkspaces": true,
+  "command": {
+    "version": {
+      "allowBranch": "master",
+      "message": "chore(release): Publish new versions"
+    }
+  }
+}
