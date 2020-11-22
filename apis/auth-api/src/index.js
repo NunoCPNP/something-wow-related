@@ -31,6 +31,7 @@ const config = {
 }
 
 const { ClientCredentials } = require('simple-oauth2')
+let myToken = null
 
 async function getToken() {
   const client = new ClientCredentials(config)
@@ -39,24 +40,35 @@ async function getToken() {
     scopes: 'wow.profile',
   }
 
-  try {
+  if (myToken === null || myToken.expired()) {
     const accessToken = await client.getToken(tokenParams)
+    myToken = accessToken
     return accessToken
-  } catch (error) {
-    console.log('Access Token error', error.message)
+  } else {
+    return myToken
   }
+}
+
+function setTokenCookie(token, res) {
+  const {
+    token: { access_token, expires_at },
+  } = token
+
+  res.cookie('token', access_token, {
+    expires: expires_at,
+    HttpOnly: true,
+  })
 }
 
 getToken()
 
 app.use('/', async (req, res) => {
   const token = await getToken()
+  setTokenCookie(token, res)
 
-  // TODO -> Better way to handle token -> use cookie
-  
   // example request
   // https://eu.api.blizzard.com/profile/wow/character/blackhand/martyro?namespace=profile-eu&locale=en_GB&access_token=<<key>>
-  
+
   res.status(200).send({ token })
 })
 
