@@ -16,6 +16,8 @@
   "scripts": {
     "preinstall": "node checkYarn.js",
     "version": "lerna version --conventional-commits --yes",
+    "api": "lerna run dev --scope @wow/auth-api --stream",
+    "app": "lerna run dev --scope @wow/main-app --strem",
     "storybook": "lerna run storybook --scope @wow/components --stream"
   },
   "lint-staged": {
